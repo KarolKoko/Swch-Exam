@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>SwCh Exam</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">SWCH Exam</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="/project1.html">Program 1</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/project2.html">Program 2</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/project3.html">Program 3</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <main>
+        <div class="p-4">
+            <h4>Program 1</h4>
+            <p>Sprawdź, czy zbiór liczb zawiera daną liczbę. Program wykorzystuje algorytm wyszukiwania binarnego.</p>
+        <div class="p-4">
+        
+<code>
+JavaScript
+<pre>
+
+const numbersArrayValidator = (array) => {
+    if (Array.isArray(array)) {
+        if (array.length > 0) {
+        let x = 0;
+        while (x < array.length) {
+            if (isNaN(array[x])) {
+            break;
+            } else {
+            x = x + 1;
+            }
+        }
+        if (x == array.length) {
+            return true;
+        } else {
+            return false;
+        }
+        }
+    } else {
+        return false;
+    }
+};
+    
+const doesArrayContainsNumber = (number, array) => {
+    if (!isNaN(number) && numbersArrayValidator(array)) {
+        const sortedNumbersArray = array.sort((a, b) => a - b);
+        let firstIndex = 0;
+        let lastIndex = sortedNumbersArray.length - 1;
+        let currentIndex;
+        while (firstIndex <= lastIndex) {
+        currentIndex = Math.floor((firstIndex + lastIndex) / 2);
+        if (sortedNumbersArray[currentIndex] < number) {
+            firstIndex = currentIndex + 1;
+        } else if (sortedNumbersArray[currentIndex] > number) {
+            lastIndex = currentIndex - 1;
+        } else {
+            return 'Tablica zawiera podaną liczbę';
+        }
+        }
+        return 'Tablica nie zawiera podanej liczby';
+    } else {
+        return 'Error 400 - błędne zapytanie';
+    }
+};
+</pre>
+</code>
+
+            <form style="max-width: 800px;" onsubmit="runCode(event)" onreset="resetForm()">
+                <div class="mb-3">
+                    <label for="usersArray" class="form-label">Twoja tablica</label>
+                    <input type="text" class="form-control" id="usersArray" aria-describedby="usersArrayHelp" data-bs-theme="dark">
+                    <div id="usersArrayHelp" class="form-text text-light">Wpisz liczby po przecinku</div>
+                </div>
+                <div class="mb-3">
+                    <label for="usersNumber" class="form-label">Szukana liczba</label>
+                    <input type="number" class="form-control" id="usersNumber" aria-describedby="usersNumberHelp" data-bs-theme="dark">
+                </div>
+                <div class="d-flex" style="gap: 10px">
+                    <button class="btn btn-primary" type="submit">Uruchom <img src="./assets/play-fill.svg" alt="Uruchom"></button>
+                    <button class="btn btn-primary" type="reset">Reset <img src="./assets/arrow-clockwise.svg" alt="Reset"></button>
+                </div>
+                <p class="text-danger" id="errorMsg"></p>
+            </form>
+            <p class="mt-3">Konsola:</p>
+            <div class="border p-3 border-light-subtle" style="max-width: 800px; color: #b3b3b3;" id="outputConsole"></div>
+        </div>
+      </main>
+      <footer>
+        <p>&copy; <span id="currentYear"></span> SwCh Exam by Karol Kokosza. All rights reserved</p>
+      </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        const currentYear = document.getElementById('currentYear')
+        const usersArray = document.getElementById('usersArray')
+        const errorMsg = document.getElementById('errorMsg')
+        const outputConsole = document.getElementById('outputConsole')
+        const usersNumber = document.getElementById('usersNumber')
+        currentYear.textContent = new Date().getFullYear()
+
+        const numbersArrayValidator = (array) => {
+            if (Array.isArray(array)) {
+                if (array.length > 0) {
+                let x = 0;
+                while (x < array.length) {
+                    if (isNaN(array[x])) {
+                    break;
+                    } else {
+                    x = x + 1;
+                    }
+                }
+                if (x == array.length) {
+                    return true;
+                } else {
+                    return false;
+                }
+                }
+            } else {
+                return false;
+            }
+        };
+
+        const doesArrayContainsNumber = (number, array) => {
+            if (!isNaN(number) && numbersArrayValidator(array)) {
+                const sortedNumbersArray = array.sort((a, b) => a - b);
+                let firstIndex = 0;
+                let lastIndex = sortedNumbersArray.length - 1;
+                let currentIndex;
+                while (firstIndex <= lastIndex) {
+                currentIndex = Math.floor((firstIndex + lastIndex) / 2);
+                if (sortedNumbersArray[currentIndex] < number) {
+                    firstIndex = currentIndex + 1;
+                } else if (sortedNumbersArray[currentIndex] > number) {
+                    lastIndex = currentIndex - 1;
+                } else {
+                    return 'Tablica zawiera podaną liczbę';
+                }
+                }
+                return 'Tablica nie zawiera podanej liczby';
+            } else {
+                return 'Error 400 - błędne zapytanie';
+            }
+        };
+
+        const runCode = (e) => {
+            e.preventDefault()
+            const array = usersArray.value.split(',')
+            if( usersNumber.value && usersArray.value){
+                if(numbersArrayValidator(array)){
+                    outputConsole.textContent = `// ${doesArrayContainsNumber(Number(usersNumber.value), array)}`
+                }else{
+                    outputConsole.textContent = '// Niepoprawny format tablicy'
+                }
+            }else{
+                outputConsole.textContent = '// Podaj obie wartości'
+            }
+        }   
+
+        const resetForm = () => {
+            usersArray.value = ''
+            outputConsole.textContent = ''
+            usersNumber.value = ''
+        }
+    </script>
+</body>
+</html>

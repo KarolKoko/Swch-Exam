@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>SwCh Exam</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">SWCH Exam</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/project1.html">Program 1</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="/project2.html">Program 2</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/project3.html">Program 3</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <main>
+        <div class="p-4">
+            <h4>Program 2</h4>
+            <p>Oblicz wyrażenie zapisane w Odwróconej Notacji Polskiej</p>
+        </div>
+        <div class="p-4">
+<code>
+<pre>
+    JavaScript
+    
+    const allowedChars = [
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '8',
+        '9',
+        '0',
+        '+',
+        '-',
+        '*',
+        '/',
+        ' '
+    ];
+
+    const arrValidator = (array) => {
+        if (Array.isArray(array)) {
+            if (array.length > 0) {
+                let x = 0;
+                while (x < array.length) {
+                    if (allowedChars.includes(array[x]) || !isNaN(array[x])) {
+                        x = x + 1;
+                    } else {
+                        break;
+                    }
+                }
+                if (x == array.length) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+    };
+
+    const isOperator = (char) => {
+        if (allowedChars.indexOf(char) >= 10) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    const doMath = (numberA, numberB, operator) => {
+        switch (operator) {
+            case '+':
+                return numberA + numberB;
+            case '-':
+                return numberA - numberB;
+            case '*':
+                return numberA * numberB;
+            case '/':
+                return numberA / numberB;
+            default:
+                return 0;
+        }
+    };
+
+    const ONPparser = (expression) => {
+        let stack = [];
+        if(expression.includes('+') || expression.includes('-') || expression.includes('*') || expression.includes('/')){
+            const elements = expression.split(' ');
+            if (arrValidator(elements)) {
+                elements.forEach((el) => {
+                    if (!isOperator(el)) {
+                        stack.push(Number(el));
+                    } else {
+                        if (stack.length < 2) {
+                            stack = ['Brak składników do liczenia. Błędne wyrażenie']
+                        } else {
+                            const numberToPush = doMath(
+                                Number(stack[stack.length - 2]),
+                                Number(stack[stack.length - 1]),
+                                el
+                            );
+                            stack = stack.slice(null, -2);
+                            stack.push(numberToPush);
+                        }
+                    }
+                });
+                return `${stack.join('') !== 'Brak składników do liczenia. Błędne wyrażenie' ? '// Wynik to: '+stack.join('') : '// Brak składników do liczenia. Błędne wyrażenie'}`;
+            } else {
+                return '// Nieprawidłowy format wyrażenia';
+            }
+        }else{
+            return '// Wyrażenie nie zawiera żanych operatorów';
+        }
+    };
+</pre>
+</code>
+            <form style="max-width: 800px;" onsubmit="runCode(event)" onreset="resetForm()">
+                <div class="mb-3">
+                    <label for="usersExp" class="form-label">Wyrażenie ONP</label>
+                    <input type="text" class="form-control" id="usersExp" aria-describedby="usersExpHelp" data-bs-theme="dark">
+                    <div id="usersExpHelp" class="form-text text-light">Wpisz znaki po spacji</div>
+                </div>
+                <div class="d-flex" style="gap: 10px">
+                    <button class="btn btn-primary" type="submit">Uruchom <img src="./assets/play-fill.svg" alt="Uruchom"></button>
+                    <button class="btn btn-primary" type="reset">Reset <img src="./assets/arrow-clockwise.svg" alt="Reset"></button>
+                </div>
+                <p class="text-danger" id="errorMsg"></p>
+            </form>
+            <p class="mt-3">Konsola:</p>
+        <div class="border p-3 border-light-subtle" style="max-width: 800px; color: #b3b3b3;" id="outputConsole"></div>
+        </div>
+        
+      </main>
+      <div class="modal fade" id="arrayModal" tabindex="-1" aria-labelledby="arrayModalLabel" aria-hidden="true" data-bs-theme="dark">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="arrayModalLabel">Tablice</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>W różnych językach programowania reprezentacja, czy też sposób działania będzie się różnił. Jednak założenie jest takie że dane różnego typu mają być ułożone jedna po drugiej, w komórkach nazwanych indexami. Niektóre języki programowania będą wymagały podanie długości tablicy, a niektóre nie</p>
+              <b>Przykład JS</b>
+              <p>W tym przypadku tablica jest instancją, typem złożnym. Deklarując stałą (const) będziemy mogli ją modyfikować. Dodatkowo nie musimy deklarować długości tablicy tak jak np. w </p>
+              <code>
+<pre>
+const arr = ["a", "b", "c", 1, 2, 3]
+arr.push(5)
+arr.shift()
+arr.pop()
+console.log(arr) // ['b', 'c', 1, 2, 3]
+</pre>
+              </code>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="stackModal" tabindex="-1" aria-labelledby="stackModalLabel" aria-hidden="true" data-bs-theme="dark">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="stackModalLabel">Tablice</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Niektóre języki programowania umożliwiają implementację stosów jako jeden ze sposbów zarządzania pamięcią</p>
+              <p>W wysokopoziomowym JS stacki możemy zobserować w Execution stacku. Jest to miejsce gdzie stackowane są contexty, czyli zgodnie z zasadą LIFO najpierw wykonywane będą te, które zostały dodane tam jako ostatnie. Chodzi o wykonanie kodu. Każda funkcja będzie posiadała swój własny context wykonania i to Execution context będzie odpowiedzialny za wykonanie kodu.</p>
+              <code>
+<pre>
+const a = 1 // global context
+const b = 2 // global context
+function first () { // global context
+    console.log('first');
+
+    function second () {
+        console.log('second');
+    }
+
+    second() // second functional context
+}
+
+first() // first functional context
+
+// Execution stack
+// global context
+// first context
+// second context
+
+// Execution order
+// second context
+// first context
+// global context
+</pre>
+              </code>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer>
+        <p>&copy; <span id="currentYear"></span> SwCh Exam by Karol Kokosza. All rights reserved</p>
+      </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        const currentYear = document.getElementById('currentYear')
+        const usersExp = document.getElementById('usersExp')
+        const errorMsg = document.getElementById('errorMsg')
+        const outputConsole = document.getElementById('outputConsole')
+        currentYear.textContent = new Date().getFullYear()
+
+        const allowedChars = [
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '6',
+            '7',
+            '8',
+            '9',
+            '0',
+            '+',
+            '-',
+            '*',
+            '/',
+            ' '
+            ];
+
+            const arrValidator = (array) => {
+                if (Array.isArray(array)) {
+                    if (array.length > 0) {
+                        let x = 0;
+                        while (x < array.length) {
+                            if (allowedChars.includes(array[x]) || !isNaN(array[x])) {
+                                x = x + 1;
+                            } else {
+                                break;
+                            }
+                        }
+                        if (x == array.length) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                } else {
+                    return false;
+                }
+            };
+
+            const isOperator = (char) => {
+                if (allowedChars.indexOf(char) >= 10) {
+                    return true;
+                } else {
+                    return false;
+                }
+            };
+
+            const doMath = (numberA, numberB, operator) => {
+                switch (operator) {
+                    case '+':
+                        return numberA + numberB;
+                    case '-':
+                        return numberA - numberB;
+                    case '*':
+                        return numberA * numberB;
+                    case '/':
+                        return numberA / numberB;
+                    default:
+                        return 0;
+                }
+            };
+
+            const ONPparser = (expression) => {
+                let stack = [];
+                if(expression.includes('+') || expression.includes('-') || expression.includes('*') || expression.includes('/')){
+                    const elements = expression.split(' ');
+                    if (arrValidator(elements)) {
+                        elements.forEach((el) => {
+                            if (!isOperator(el)) {
+                                stack.push(Number(el));
+                            } else {
+                                if (stack.length < 2) {
+                                    stack = ['Brak składników do liczenia. Błędne wyrażenie']
+                                } else {
+                                    const numberToPush = doMath(
+                                        Number(stack[stack.length - 2]),
+                                        Number(stack[stack.length - 1]),
+                                        el
+                                    );
+                                    stack = stack.slice(null, -2);
+                                    stack.push(numberToPush);
+                                }
+                            }
+                        });
+                        return `${stack.join('') !== 'Brak składników do liczenia. Błędne wyrażenie' ? '// Wynik to: '+stack.join('') : '// Brak składników do liczenia. Błędne wyrażenie'}`;
+                    } else {
+                        return '// Nieprawidłowy format wyrażenia';
+                    }
+                }else{
+                    return '// Wyrażenie nie zawiera żanych operatorów';
+                }
+            };
+
+        const runCode = (e) => {
+            e.preventDefault()
+            if(usersExp.value){
+                outputConsole.textContent = ONPparser(usersExp.value)
+            }else{
+                outputConsole.textContent = '// Podaj wyrażenie'
+            }
+        }   
+
+        const resetForm = () => {
+            usersExp.value = ''
+            outputConsole.textContent = ''
+        }
+    </script>
+</body>
+</html>

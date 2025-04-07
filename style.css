@@ -1,0 +1,25 @@
+body{
+    background-color: #212529;
+    color: #fff;
+}
+
+main{
+    min-height: calc(100vh - 115px);
+}
+
+footer{
+    border-top: 1px solid #495057;
+    padding-left: 10px;
+}
+
+footer > p{
+    margin-top: 15px;
+}
+
+#resultsList > li:hover{
+    text-decoration: line-through;
+}
+
+#resultsList > li{
+    cursor: pointer;
+}

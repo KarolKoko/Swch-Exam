@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>SwCh Exam</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">SWCH Exam</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/project1.html">Program 1</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/project2.html">Program 2</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="/project3.html">Program 3</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <main>
+        <div class="p-4">
+            <h4>Program 3</h4>
+            <p>Konwerter DEC <-> BIN</p>
+        </div>
+        <div class="px-4">
+            <code>
+                <pre>
+const currentYear = document.getElementById('currentYear')
+currentYear.textContent = new Date().getFullYear()
+const firstInput = document.getElementById('firstInput')
+const secondInput = document.getElementById('secondInput')
+const switchButton = document.getElementById("switchButton")
+const firstInputLabel = document.querySelector('label[for="firstInput"]')
+const secondInputLabel = document.querySelector('label[for="secondInput"]')
+const resultsList = document.getElementById("resultsList")
+const errorMsg = document.getElementById('errorMsg')
+let isDecBin = true
+
+const switchMode = () => {
+    isDecBin = !isDecBin
+    secondInput.value = ''
+    firstInput.value = ''
+    if(isDecBin){
+        firstInputLabel.textContent = "DEC"
+        secondInputLabel.textContent = "BIN"
+    }else{
+        firstInputLabel.textContent = "BIN"
+        secondInputLabel.textContent = "DEC"
+    }
+}
+
+const convertDecToBin = (num) => {
+    const binArray = []
+    let number = num
+    while(number >= 1){
+        console.log(number)
+        binArray.push(number % 2)
+        number  = Math.floor(number/2)
+    }
+    return binArray
+}
+
+const createPowerArray = (length) => {
+    const arr = [1]
+    while(arr.length < length){
+        arr.push(arr[arr.length-1] * 2)
+    }
+    return arr.reverse()
+}
+
+const convertBinToDec = (binNum) => {
+    const binArr = binNum.split('')
+    const powerArray = createPowerArray(binArr.length)
+    console.log(powerArray)
+    let result = 0
+    binArr.forEach((b, index) => {
+        if(b == '1'){
+            result = result+powerArray[index]
+        }
+    })
+    return result
+}
+
+const binExpValidator = (binNum) => {
+    const binArr = binNum.split('')
+    let errorCounter = 0
+    binArr.forEach(b => {
+        console.log(b, errorCounter)
+        if(b !== '1' && b !== '0'){
+            errorCounter = errorCounter+1
+        }
+    })
+    if(errorCounter == 0){
+        return true
+    }else{
+        return false
+    }
+}
+
+const convertValues = (e) => {
+    e.preventDefault()
+    if(!isNaN(firstInput.value)){
+        if(isDecBin){
+            secondInput.value = convertDecToBin(Number(firstInput.value)).reverse().join('')
+        }else{
+            if(firstInput.value.length <= 32){
+                if(binExpValidator(firstInput.value)){
+                    secondInput.value = convertBinToDec(firstInput.value)
+                }else{
+                    errorMsg.textContent = 'Błędny format'
+                    setTimeout(() => {
+                        errorMsg.textContent = ''
+                    }, 3000)
+                }
+            }else{
+                errorMsg.textContent = '32 bit max'
+                setTimeout(() => {
+                    errorMsg.textContent = ''
+                }, 3000)
+            }
+        }
+    }else{
+        errorMsg.textContent = 'NaN'
+        setTimeout(() => {
+            errorMsg.textContent = ''
+        }, 3000)
+    }
+}
+
+const addToList = () => {
+    if(firstInput.value && secondInput.value){
+        if(!resultsList.querySelector(`#res${firstInput.value}${secondInput.value}`)){
+            resultsList.innerHTML = `${resultsList.innerHTML}<li id="res${firstInput.value}${secondInput.value}">${firstInput.value}<sub>${isDecBin ? '(10)' : '(2)'}</sub> => ${secondInput.value}<sub>${isDecBin ? '(2)' : '(10)'}</sub></li>`
+        }
+    }
+}
+
+resultsList.addEventListener('click', (e) => {
+    if(e.target.tagName == 'LI'){
+        e.target.remove()
+    }
+})  
+
+const resetForm = () => {
+    firstInput.value = ''
+    secondInput.value = ''
+}
+                </pre>
+            </code>
+        </div>
+        <div class="p-4">
+            <b>Działa dla:</b>
+            <ul>
+                <li>Liczb naturalnych</li>
+            </ul>
+            <form style="max-width: 800px;" onsubmit="runCode(event)" onreset="resetForm()" class="mb-3">
+                <div class="d-flex align-items-end">
+                    <div>
+                        <label for="firstInput" class="form-label">DEC</label>
+                        <input type="number" class="form-control" id="firstInput" aria-describedby="firstInputHelp" data-bs-theme="dark" style="min-width: 280px;">
+                    </div>
+                    <button class="btn" id="switchButton" type="button" tabindex="-1" onclick="switchMode()">
+                        <img src="./assets/shuffle.svg" alt="">
+                    </button>
+                    <div>
+                        <label for="secondInput" class="form-label">BIN</label>
+                        <input type="number" class="form-control" id="secondInput" aria-describedby="secondInputHelp" data-bs-theme="dark" disabled style="min-width: 280px;">
+                    </div>
+                </div>
+                <p class="text-danger mt-2" id="errorMsg"></p>
+                <div class="d-flex mt-3">
+                    <button class="btn btn-success me-3" type="submit" onclick="convertValues(event)">Przelicz</button>
+                    <button class="btn btn-danger me-3" type="reset" onclick="resetForm()">Reset</button>
+                    <button class="btn btn-primary" type="button" onclick="addToList()">Dodaj wynik do listy</button>
+                </div>
+            </form>
+            <b>Wynik:</b>
+            <ul id="resultsList" class="mt-2" style="max-width: 300px;">
+            </ul>
+        </div>
+      </main>
+      <footer>
+        <p>&copy; <span id="currentYear"></span> SwCh Exam by Karol Kokosza. All rights reserved</p>
+      </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        const currentYear = document.getElementById('currentYear')
+        currentYear.textContent = new Date().getFullYear()
+        const firstInput = document.getElementById('firstInput')
+        const secondInput = document.getElementById('secondInput')
+        const switchButton = document.getElementById("switchButton")
+        const firstInputLabel = document.querySelector('label[for="firstInput"]')
+        const secondInputLabel = document.querySelector('label[for="secondInput"]')
+        const resultsList = document.getElementById("resultsList")
+        const errorMsg = document.getElementById('errorMsg')
+        let isDecBin = true
+
+        const switchMode = () => {
+            isDecBin = !isDecBin
+            secondInput.value = ''
+            firstInput.value = ''
+            if(isDecBin){
+                firstInputLabel.textContent = "DEC"
+                secondInputLabel.textContent = "BIN"
+            }else{
+                firstInputLabel.textContent = "BIN"
+                secondInputLabel.textContent = "DEC"
+            }
+        }
+        
+        const convertDecToBin = (num) => {
+            const binArray = []
+            let number = num
+            while(number >= 1){
+                console.log(number)
+                binArray.push(number % 2)
+                number  = Math.floor(number/2)
+            }
+            return binArray
+        }
+
+        const createPowerArray = (length) => {
+            const arr = [1]
+            while(arr.length < length){
+                arr.push(arr[arr.length-1] * 2)
+            }
+            return arr.reverse()
+        }
+
+        const convertBinToDec = (binNum) => {
+            const binArr = binNum.split('')
+            const powerArray = createPowerArray(binArr.length)
+            console.log(powerArray)
+            let result = 0
+            binArr.forEach((b, index) => {
+                if(b == '1'){
+                    result = result+powerArray[index]
+                }
+            })
+            return result
+        }
+
+        const binExpValidator = (binNum) => {
+            const binArr = binNum.split('')
+            let errorCounter = 0
+            binArr.forEach(b => {
+                console.log(b, errorCounter)
+                if(b !== '1' && b !== '0'){
+                    errorCounter = errorCounter+1
+                }
+            })
+            if(errorCounter == 0){
+                return true
+            }else{
+                return false
+            }
+        }
+
+        const convertValues = (e) => {
+            e.preventDefault()
+            if(!isNaN(firstInput.value)){
+                if(isDecBin){
+                    secondInput.value = convertDecToBin(Number(firstInput.value)).reverse().join('')
+                }else{
+                    if(firstInput.value.length <= 32){
+                        if(binExpValidator(firstInput.value)){
+                            secondInput.value = convertBinToDec(firstInput.value)
+                        }else{
+                            errorMsg.textContent = 'Błędny format'
+                            setTimeout(() => {
+                                errorMsg.textContent = ''
+                            }, 3000)
+                        }
+                    }else{
+                        errorMsg.textContent = '32 bit max'
+                        setTimeout(() => {
+                            errorMsg.textContent = ''
+                        }, 3000)
+                    }
+                }
+            }else{
+                errorMsg.textContent = 'NaN'
+                setTimeout(() => {
+                    errorMsg.textContent = ''
+                }, 3000)
+            }
+        }
+
+        const addToList = () => {
+            if(firstInput.value && secondInput.value){
+                if(!resultsList.querySelector(`#res${firstInput.value}${secondInput.value}`)){
+                    resultsList.innerHTML = `${resultsList.innerHTML}<li id="res${firstInput.value}${secondInput.value}">${firstInput.value}<sub>${isDecBin ? '(10)' : '(2)'}</sub> => ${secondInput.value}<sub>${isDecBin ? '(2)' : '(10)'}</sub></li>`
+                }
+            }
+        }
+
+        resultsList.addEventListener('click', (e) => {
+            if(e.target.tagName == 'LI'){
+                e.target.remove()
+            }
+        })  
+
+        const resetForm = () => {
+            firstInput.value = ''
+            secondInput.value = ''
+        }
+
+    </script>
+</body>
+</html>
